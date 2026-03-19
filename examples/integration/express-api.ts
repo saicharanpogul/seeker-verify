@@ -2,22 +2,22 @@
  * Express API integration example.
  *
  * A minimal API server that gates endpoints behind Seeker device ownership
- * and SKR token holdings. Shows how seeker-verify fits into a backend.
+ * and SKR token holdings. Shows how seeker-sdk fits into a backend.
  *
  * Run: npx ts-node express-api.ts
- * Requires: npm install express @solana/web3.js seeker-verify
+ * Requires: npm install express @solana/web3.js seeker-sdk
  */
 
 import { Connection } from "@solana/web3.js";
 
-// In your project: import from "seeker-verify"
+// In your project: import from "seeker-sdk"
 import {
   verifySGT,
   getSeekerProfile,
   hasMinSKR,
   resolveSkrDomain,
   InvalidAddressError,
-} from "seeker-verify";
+} from "seeker-sdk";
 
 const RPC_URL = process.env.RPC_URL || "https://api.mainnet-beta.solana.com";
 const connection = new Connection(RPC_URL);

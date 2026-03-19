@@ -5,7 +5,7 @@
  * to prevent the same Seeker device from claiming rewards multiple times.
  */
 import { Connection } from "@solana/web3.js";
-import { verifySGT } from "seeker-verify";
+import { verifySGT } from "seeker-sdk";
 
 const RPC_URL = "https://api.mainnet-beta.solana.com";
 

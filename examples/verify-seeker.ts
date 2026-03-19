@@ -5,7 +5,7 @@
  * confirming the user owns a Solana Seeker device.
  */
 import { Connection } from "@solana/web3.js";
-import { isSeeker, getSGTDetails } from "seeker-verify";
+import { isSeeker, getSGTDetails } from "seeker-sdk";
 
 const RPC_URL = "https://api.mainnet-beta.solana.com";
 

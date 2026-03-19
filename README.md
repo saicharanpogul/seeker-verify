@@ -1,6 +1,6 @@
-# seeker-verify
+# seeker-sdk
 
-[![npm](https://img.shields.io/npm/v/seeker-verify)](https://www.npmjs.com/package/seeker-verify)
+[![npm](https://img.shields.io/npm/v/seeker-sdk)](https://www.npmjs.com/package/seeker-sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 The complete TypeScript SDK for the Solana Seeker ecosystem. Verify device ownership, resolve .skr domains, query SKR token balances, staking with yield, guardian pools, global staking stats, and build stake/unstake transactions — all in one package.
@@ -8,9 +8,9 @@ The complete TypeScript SDK for the Solana Seeker ecosystem. Verify device owner
 ## Install
 
 ```bash
-npm install seeker-verify
+npm install seeker-sdk
 # or
-bun add seeker-verify
+bun add seeker-sdk
 ```
 
 **Peer dependency:** `@solana/web3.js` ^1.95.0
@@ -19,7 +19,7 @@ bun add seeker-verify
 
 ```typescript
 import { Connection } from "@solana/web3.js";
-import { getSeekerProfile, getStakingStats } from "seeker-verify";
+import { getSeekerProfile, getStakingStats } from "seeker-sdk";
 
 const connection = new Connection("https://api.mainnet-beta.solana.com");
 
@@ -160,7 +160,7 @@ import {
   createCancelUnstakeInstruction,
   createWithdrawInstruction,
   deriveUserStakePda,
-} from "seeker-verify";
+} from "seeker-sdk";
 
 // Stake 10,000 SKR to a guardian
 const stakeIx = createStakeInstruction({
@@ -202,7 +202,7 @@ import {
   deriveUserStakePda,
   deriveGuardianPoolPda,
   deriveStakeVaultPda,
-} from "seeker-verify";
+} from "seeker-sdk";
 
 const [configPda] = deriveStakeConfigPda();
 const [userStakePda] = deriveUserStakePda(user, guardianPool);

@@ -1,4 +1,4 @@
-/** Base error class for all seeker-verify errors */
+/** Base error class for all seeker-sdk errors */
 export class SeekerVerifyError extends Error {
   constructor(message: string) {
     super(message);

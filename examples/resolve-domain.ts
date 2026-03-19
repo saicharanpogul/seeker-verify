@@ -11,7 +11,7 @@ import {
   getSkrDomains,
   isSkrDomain,
   getSeekerProfile,
-} from "seeker-verify";
+} from "seeker-sdk";
 
 const RPC_URL = "https://api.mainnet-beta.solana.com";
 

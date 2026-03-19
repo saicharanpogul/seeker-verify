@@ -1,7 +1,7 @@
 {
-  "name": "seeker-verify",
-  "version": "0.3.0",
-  "description": "TypeScript SDK for verifying Solana Seeker device ownership, resolving .skr domains, and querying SKR token state",
+  "name": "seeker-sdk",
+  "version": "0.1.0",
+  "description": "The complete TypeScript SDK for the Solana Seeker ecosystem — device verification, .skr domains, SKR staking, guardian pools, and transaction builders",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -36,7 +36,9 @@
     "solana-mobile",
     "token-2022",
     "domain",
-    "verification"
+    "staking",
+    "guardian",
+    "sdk"
   ],
   "author": "saicharanpogul",
   "license": "MIT",
