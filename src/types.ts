@@ -1,0 +1,98 @@
+import { Connection, PublicKey } from "@solana/web3.js";
+
+/** Result of SGT verification */
+export interface SGTResult {
+  /** Whether the wallet owns a verified Seeker Genesis Token */
+  isSeeker: boolean;
+  /** The SGT's unique mint address (one per device), null if not a Seeker */
+  mintAddress: string | null;
+  /** The wallet address that was checked */
+  walletAddress: string;
+}
+
+/** Options for SGT verification */
+export interface SGTVerifyOptions {
+  /** Solana RPC connection */
+  connection: Connection;
+  /** Wallet address to verify */
+  walletAddress: string | PublicKey;
+  /** Previously used SGT mint addresses for anti-sybil protection */
+  usedMints?: Set<string>;
+  /** Enable caching of results (default: true) */
+  cache?: boolean;
+}
+
+/** Result of .skr domain resolution */
+export interface SkrDomainResult {
+  /** The full domain name (e.g. "saicharan.skr") */
+  domain: string;
+  /** The owner's wallet public key */
+  ownerAddress: string;
+}
+
+/** SKR token balance information */
+export interface SKRBalance {
+  /** Raw token amount in smallest units */
+  balance: number;
+  /** Human-readable balance with decimals applied */
+  uiBalance: number;
+  /** The wallet address queried */
+  walletAddress: string;
+}
+
+/** SKR staking information */
+export interface SKRStakeInfo {
+  /** Raw staked amount */
+  stakedAmount: number;
+  /** Human-readable staked amount */
+  stakedUiAmount: number;
+  /** Whether the wallet has any SKR staked */
+  isStaked: boolean;
+  /** The wallet address queried */
+  walletAddress: string;
+}
+
+/** Aggregate Seeker profile combining all verification data */
+export interface SeekerProfile {
+  /** The wallet address */
+  walletAddress: string;
+  /** Whether the wallet holds a verified SGT */
+  isSeeker: boolean;
+  /** The SGT mint address if verified, null otherwise */
+  sgtMintAddress: string | null;
+  /** The .skr domain owned by this wallet, null if none */
+  skrDomain: string | null;
+  /** SKR token balance (UI amount) */
+  skrBalance: number;
+  /** Whether the wallet has staked SKR */
+  isStaked: boolean;
+}
+
+/** Options for functions that support caching */
+export interface CacheOptions {
+  /** Enable caching of results (default: true) */
+  cache?: boolean;
+}
+
+/** Configuration for the LRU cache */
+export interface CacheConfig {
+  /** Maximum number of entries in the cache */
+  maxSize: number;
+  /** Time-to-live in seconds */
+  ttlSeconds: number;
+}
+
+/** A wallet address input that can be either a string or PublicKey */
+export type WalletAddress = string | PublicKey;
+
+/** Helper to convert WalletAddress to string */
+export function toWalletString(address: WalletAddress): string {
+  if (typeof address === "string") return address;
+  return address.toBase58();
+}
+
+/** Helper to convert WalletAddress to PublicKey */
+export function toPublicKey(address: WalletAddress): PublicKey {
+  if (typeof address === "string") return new PublicKey(address);
+  return address;
+}
