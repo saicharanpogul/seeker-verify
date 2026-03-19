@@ -86,6 +86,9 @@ export async function getSeekerProfile(
       getSKRStakeInfo(connection, pubkey),
     ]);
 
+  const stakeData =
+    stakeResult.status === "fulfilled" ? stakeResult.value : null;
+
   return {
     walletAddress: walletStr,
     isSeeker:
@@ -100,9 +103,8 @@ export async function getSeekerProfile(
       balanceResult.status === "fulfilled"
         ? balanceResult.value.uiBalance
         : 0,
-    isStaked:
-      stakeResult.status === "fulfilled"
-        ? stakeResult.value.isStaked
-        : false,
+    isStaked: stakeData?.isStaked ?? false,
+    stakedAmount: stakeData?.currentAmount ?? 0,
+    yieldEarned: stakeData?.yieldEarned ?? 0,
   };
 }

@@ -30,6 +30,41 @@ export const SKR_STAKING_PROGRAM_ID = new PublicKey(
   "SKRskrmtL83pcL4YqLWt6iPefDqwXQWHSw9S9vz94BZ"
 );
 
+/** SKR staking StakeConfig account (PDA of ["stake_config"]) */
+export const SKR_STAKE_CONFIG = new PublicKey(
+  "4HQy82s9CHTv1GsYKnANHMiHfhcqesYkK6sB3RDSYyqw"
+);
+
+/** Anchor discriminator for UserStake accounts */
+export const USER_STAKE_DISCRIMINATOR = Buffer.from(
+  "6635a36b098a5799",
+  "hex"
+);
+
+/** Share price precision scalar (1e9) */
+export const SHARE_PRECISION = BigInt(1_000_000_000);
+
+/** Size of a UserStake account in bytes */
+export const USER_STAKE_ACCOUNT_SIZE = 169;
+
+/**
+ * StakeConfig account layout offsets.
+ * Layout: disc(8) + bump(1) + authority(32) + mint(32) + stake_vault(32)
+ *         + min_stake_amount(u64) + cooldown_seconds(u64) + total_shares(u128)
+ *         + share_price(u128) + ...
+ */
+export const STAKE_CONFIG_SHARE_PRICE_OFFSET = 137;
+
+/**
+ * UserStake account layout offsets.
+ * Layout: disc(8) + bump(1) + stake_config(32) + user(32) + guardian_pool(32)
+ *         + shares(u128) + cost_basis(u128) + cumulative_commission(u128)
+ *         + unstaking_amount(u64) + unstake_timestamp(i64)
+ */
+export const USER_STAKE_USER_OFFSET = 41;
+export const USER_STAKE_SHARES_OFFSET = 105;
+export const USER_STAKE_COST_BASIS_OFFSET = 121;
+export const USER_STAKE_UNSTAKING_OFFSET = 153;
 
 /** .skr top-level domain (powered by AllDomains protocol) */
 export const SKR_TLD = ".skr";

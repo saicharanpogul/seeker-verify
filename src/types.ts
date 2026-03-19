@@ -42,12 +42,16 @@ export interface SKRBalance {
 
 /** SKR staking information */
 export interface SKRStakeInfo {
-  /** Raw staked amount */
-  stakedAmount: number;
-  /** Human-readable staked amount */
-  stakedUiAmount: number;
   /** Whether the wallet has any SKR staked */
   isStaked: boolean;
+  /** Original deposited amount (UI units) */
+  depositedAmount: number;
+  /** Current value including yield (UI units) */
+  currentAmount: number;
+  /** Yield earned (UI units): currentAmount - depositedAmount */
+  yieldEarned: number;
+  /** Amount currently unstaking / in cooldown (UI units) */
+  unstakingAmount: number;
   /** The wallet address queried */
   walletAddress: string;
 }
@@ -62,10 +66,14 @@ export interface SeekerProfile {
   sgtMintAddress: string | null;
   /** The .skr domain owned by this wallet, null if none */
   skrDomain: string | null;
-  /** SKR token balance (UI amount) */
+  /** SKR token balance in wallet (UI amount) */
   skrBalance: number;
   /** Whether the wallet has staked SKR */
   isStaked: boolean;
+  /** Current staked value including yield (UI amount) */
+  stakedAmount: number;
+  /** Yield earned from staking (UI amount) */
+  yieldEarned: number;
 }
 
 /** Options for functions that support caching */

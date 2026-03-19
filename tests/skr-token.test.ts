@@ -84,21 +84,136 @@ describe("getSKRBalance", () => {
 });
 
 describe("getSKRStakeInfo", () => {
-  it("returns not staked (staking program lacks per-user queryable accounts)", async () => {
-    const connection = createMockConnection();
-    const result = await getSKRStakeInfo(connection, VALID_WALLET);
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  function makeUserStakeData(shares: bigint, costBasis: bigint, unstaking: bigint): Buffer {
+    // 169 bytes: disc(8) + bump(1) + stake_config(32) + user(32) + guardian_pool(32)
+    //   + shares(u128@105) + cost_basis(u128@121) + commission(u128@137) + unstaking(u64@153) + timestamp(i64@161)
+    const data = Buffer.alloc(169);
+    // discriminator
+    Buffer.from("6635a36b098a5799", "hex").copy(data, 0);
+    // shares u128 LE (just low 8 bytes for test values)
+    data.writeBigUInt64LE(shares, 105);
+    data.writeBigUInt64LE(0n, 113);
+    // cost_basis u128 LE
+    data.writeBigUInt64LE(costBasis, 121);
+    data.writeBigUInt64LE(0n, 129);
+    // unstaking_amount u64
+    data.writeBigUInt64LE(unstaking, 153);
+    return data;
+  }
+
+  function makeStakeConfigData(sharePrice: bigint): Buffer {
+    // 193 bytes, share_price u128 at offset 137
+    const data = Buffer.alloc(193);
+    data.writeBigUInt64LE(sharePrice, 137);
+    data.writeBigUInt64LE(0n, 145);
+    return data;
+  }
+
+  it("returns staking info with yield from UserStake accounts", async () => {
+    const wallet = PublicKey.unique();
+    // 10,000 SKR deposited at cost_basis 1e9, current share price 1.05e9
+    const userStakeData = makeUserStakeData(
+      BigInt(10_000_000_000), // shares
+      BigInt(1_000_000_000),  // cost_basis (1e9 = 1.0 share price at entry)
+      0n                      // no unstaking
+    );
+    const stakeConfigData = makeStakeConfigData(BigInt(1_050_000_000)); // 1.05x
+
+    const connection = {
+      getProgramAccounts: vi.fn().mockResolvedValue([
+        { pubkey: PublicKey.unique(), account: { data: userStakeData } },
+      ]),
+      getAccountInfo: vi.fn().mockResolvedValue({ data: stakeConfigData }),
+    } as unknown as Connection;
+
+    const result = await getSKRStakeInfo(connection, wallet);
+
+    expect(result.isStaked).toBe(true);
+    expect(result.depositedAmount).toBe(10000);
+    expect(result.currentAmount).toBe(10500);
+    expect(result.yieldEarned).toBe(500);
+    expect(result.unstakingAmount).toBe(0);
+  });
+
+  it("sums multiple UserStake accounts across guardians", async () => {
+    const wallet = PublicKey.unique();
+    const stake1 = makeUserStakeData(BigInt(5_000_000_000), BigInt(1_000_000_000), 0n);
+    const stake2 = makeUserStakeData(BigInt(3_000_000_000), BigInt(1_000_000_000), 0n);
+    const configData = makeStakeConfigData(BigInt(1_100_000_000)); // 1.1x
+
+    const connection = {
+      getProgramAccounts: vi.fn().mockResolvedValue([
+        { pubkey: PublicKey.unique(), account: { data: stake1 } },
+        { pubkey: PublicKey.unique(), account: { data: stake2 } },
+      ]),
+      getAccountInfo: vi.fn().mockResolvedValue({ data: configData }),
+    } as unknown as Connection;
+
+    const result = await getSKRStakeInfo(connection, wallet);
+
+    expect(result.isStaked).toBe(true);
+    expect(result.depositedAmount).toBe(8000);
+    expect(result.currentAmount).toBe(8800);
+    expect(result.yieldEarned).toBe(800);
+  });
+
+  it("returns not staked when no UserStake accounts found", async () => {
+    const wallet = PublicKey.unique();
+    const connection = {
+      getProgramAccounts: vi.fn().mockResolvedValue([]),
+    } as unknown as Connection;
+
+    const result = await getSKRStakeInfo(connection, wallet);
 
     expect(result.isStaked).toBe(false);
-    expect(result.stakedAmount).toBe(0);
-    expect(result.stakedUiAmount).toBe(0);
-    expect(result.walletAddress).toBe(VALID_WALLET);
+    expect(result.depositedAmount).toBe(0);
+    expect(result.currentAmount).toBe(0);
+    expect(result.yieldEarned).toBe(0);
+  });
+
+  it("includes unstaking amount", async () => {
+    const wallet = PublicKey.unique();
+    const stakeData = makeUserStakeData(
+      BigInt(5_000_000_000),
+      BigInt(1_000_000_000),
+      BigInt(2_000_000_000) // 2000 SKR unstaking
+    );
+    const configData = makeStakeConfigData(BigInt(1_000_000_000));
+
+    const connection = {
+      getProgramAccounts: vi.fn().mockResolvedValue([
+        { pubkey: PublicKey.unique(), account: { data: stakeData } },
+      ]),
+      getAccountInfo: vi.fn().mockResolvedValue({ data: configData }),
+    } as unknown as Connection;
+
+    const result = await getSKRStakeInfo(connection, wallet);
+
+    expect(result.unstakingAmount).toBe(2000);
   });
 
   it("throws InvalidAddressError for invalid wallet", async () => {
-    const connection = createMockConnection();
+    const connection = {
+      getProgramAccounts: vi.fn(),
+    } as unknown as Connection;
     await expect(
       getSKRStakeInfo(connection, "invalid")
     ).rejects.toThrow(InvalidAddressError);
+  });
+
+  it("throws RpcError when getProgramAccounts fails", async () => {
+    const wallet = PublicKey.unique();
+    const connection = {
+      getProgramAccounts: vi.fn().mockRejectedValue(new Error("RPC failed")),
+    } as unknown as Connection;
+
+    await expect(
+      getSKRStakeInfo(connection, wallet)
+    ).rejects.toThrow(RpcError);
   });
 });
 

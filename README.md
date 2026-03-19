@@ -124,7 +124,18 @@ interface SKRBalance {
 
 #### `getSKRStakeInfo(connection, walletAddress): Promise<SKRStakeInfo>`
 
-Get SKR staking information. The staking program (`SKRskrmtL83pcL4YqLWt6iPefDqwXQWHSw9S9vz94BZ`) does not maintain persistent per-user accounts, so this currently returns `isStaked: false`. Will be updated when per-user staking data becomes queryable.
+Get SKR staking information including deposited amount, current value with yield, and unstaking status. Queries on-chain `UserStake` accounts from the staking program and computes value using the current share price.
+
+```typescript
+interface SKRStakeInfo {
+  isStaked: boolean;
+  depositedAmount: number;   // original deposit (UI units)
+  currentAmount: number;     // current value including yield
+  yieldEarned: number;       // currentAmount - depositedAmount
+  unstakingAmount: number;   // amount in cooldown
+  walletAddress: string;
+}
+```
 
 #### `hasMinSKR(connection, walletAddress, minAmount): Promise<boolean>`
 
@@ -146,6 +157,8 @@ interface SeekerProfile {
   skrDomain: string | null;
   skrBalance: number;
   isStaked: boolean;
+  stakedAmount: number;      // current value including yield
+  yieldEarned: number;       // yield earned from staking
 }
 ```
 
@@ -225,7 +238,7 @@ This SDK queries three on-chain systems:
 | SGT Verification | Token Extensions (Token-2022) | `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb` |
 | .skr Domains | AllDomains | `@onsol/tldparser` |
 | SKR Balance | SPL Token | Standard ATA lookups |
-| SKR Staking | SKR Staking Program | `SKRskrmtL83pcL4YqLWt6iPefDqwXQWHSw9S9vz94BZ` (per-user data not queryable yet) |
+| SKR Staking | SKR Staking Program | `SKRskrmtL83pcL4YqLWt6iPefDqwXQWHSw9S9vz94BZ` |
 
 **SGT Verification Algorithm:**
 1. Fetch all Token-2022 token accounts for the wallet
