@@ -30,16 +30,6 @@ export const SKR_STAKING_PROGRAM_ID = new PublicKey(
   "SKRskrmtL83pcL4YqLWt6iPefDqwXQWHSw9S9vz94BZ"
 );
 
-/** SKR claim/distribution program (Merkle-based) */
-export const SKR_CLAIM_PROGRAM_ID = new PublicKey(
-  "mERKcfxMC5SqJn4Ld4BUris3WKZZ1ojjWJ3A3J5CKxv"
-);
-
-/** Anchor discriminator for claim accounts in the merkle program */
-export const CLAIM_ACCOUNT_DISCRIMINATOR = Buffer.from(
-  "16b7f99df75f9660",
-  "hex"
-);
 
 /** .skr top-level domain (powered by AllDomains protocol) */
 export const SKR_TLD = ".skr";

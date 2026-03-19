@@ -47,7 +47,6 @@ export {
   TOKEN_2022_PROGRAM_ID,
   SKR_MINT_ADDRESS,
   SKR_STAKING_PROGRAM_ID,
-  SKR_CLAIM_PROGRAM_ID,
   SKR_TLD,
 } from "./constants";
 

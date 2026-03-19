@@ -1,10 +1,6 @@
 import { Connection } from "@solana/web3.js";
 import { getAccount, getAssociatedTokenAddressSync } from "@solana/spl-token";
-import {
-  SKR_MINT_ADDRESS,
-  SKR_CACHE_TTL,
-  SKR_CLAIM_PROGRAM_ID,
-} from "./constants";
+import { SKR_MINT_ADDRESS, SKR_CACHE_TTL } from "./constants";
 import { SKRBalance, SKRStakeInfo, WalletAddress } from "./types";
 import { RpcError } from "./errors";
 import { validateAndParseAddress } from "./utils";
@@ -87,22 +83,19 @@ export async function getSKRBalance(
 /**
  * Get SKR staking information for a wallet.
  *
- * Queries the SKR claim program (mERKcfxMC5SqJn4Ld4BUris3WKZZ1ojjWJ3A3J5CKxv)
- * for claim accounts associated with the wallet. Claim accounts track the total
- * amount of SKR staked/claimed by a user.
+ * The SKR staking program (SKRskrmtL83pcL4YqLWt6iPefDqwXQWHSw9S9vz94BZ) does
+ * not maintain persistent per-user stake accounts on-chain — the stake deposit
+ * receipt is created and closed within the staking transaction. Because of this,
+ * individual staked amounts cannot be reliably queried from on-chain state alone.
  *
- * Account layout (64 bytes):
- * - [0..8]   Anchor discriminator
- * - [8..40]  Wallet public key
- * - [40..48] Locked amount (u64)
- * - [48..56] Unlocked/claimed amount (u64)
- * - [56..64] Total staked amount (u64)
+ * This function currently returns `isStaked: false` as a placeholder.
+ * It will be updated if the staking program adds queryable per-user accounts
+ * or if an indexer/API becomes available.
  *
  * @param connection - Solana RPC connection
  * @param walletAddress - Wallet address to query
  * @returns SKR staking information
  * @throws {InvalidAddressError} If the wallet address is invalid
- * @throws {RpcError} If the RPC connection fails
  *
  * @example
  * ```typescript
@@ -119,50 +112,14 @@ export async function getSKRStakeInfo(
   const pubkey = validateAndParseAddress(walletAddress);
   const walletStr = pubkey.toBase58();
 
-  try {
-    // Query claim program for 64-byte accounts matching this wallet at offset 8
-    // (after the 8-byte Anchor discriminator)
-    const accounts = await connection.getProgramAccounts(SKR_CLAIM_PROGRAM_ID, {
-      filters: [
-        { dataSize: 64 },
-        { memcmp: { offset: 8, bytes: pubkey.toBase58() } },
-      ],
-    });
+  void connection;
 
-    if (accounts.length === 0) {
-      return {
-        stakedAmount: 0,
-        stakedUiAmount: 0,
-        isStaked: false,
-        walletAddress: walletStr,
-      };
-    }
-
-    // Sum up staked amounts across all claim accounts
-    let totalStaked = BigInt(0);
-
-    for (const account of accounts) {
-      const data = account.account.data;
-      if (data.length >= 64) {
-        // Total staked amount is at offset 56 (u64 little-endian)
-        const amount = data.readBigUInt64LE(56);
-        totalStaked += amount;
-      }
-    }
-
-    const stakedAmount = Number(totalStaked);
-    const stakedUiAmount = stakedAmount / Math.pow(10, SKR_DECIMALS);
-
-    return {
-      stakedAmount,
-      stakedUiAmount,
-      isStaked: totalStaked > BigInt(0),
-      walletAddress: walletStr,
-    };
-  } catch (err) {
-    if (err instanceof RpcError) throw err;
-    throw new RpcError("Failed to fetch SKR staking info", err);
-  }
+  return {
+    stakedAmount: 0,
+    stakedUiAmount: 0,
+    isStaked: false,
+    walletAddress: walletStr,
+  };
 }
 
 /**
