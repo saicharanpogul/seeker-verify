@@ -38,11 +38,11 @@
     "domain",
     "verification"
   ],
-  "author": "",
+  "author": "saicharanpogul",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/seeker-verify/seeker-verify"
+    "url": "https://github.com/saicharanpogul/seeker-verify"
   },
   "dependencies": {
     "@onsol/tldparser": "^0.6.0",
