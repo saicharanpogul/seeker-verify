@@ -124,7 +124,16 @@ interface SKRBalance {
 
 #### `getSKRStakeInfo(connection, walletAddress): Promise<SKRStakeInfo>`
 
-Get SKR staking information. Returns `isStaked: false` until the staking program details are publicly documented.
+Get SKR staking information. Queries the SKR claim program for staked amounts.
+
+```typescript
+interface SKRStakeInfo {
+  stakedAmount: number;    // raw amount
+  stakedUiAmount: number;  // human-readable
+  isStaked: boolean;
+  walletAddress: string;
+}
+```
 
 #### `hasMinSKR(connection, walletAddress, minAmount): Promise<boolean>`
 
@@ -224,7 +233,8 @@ This SDK queries three on-chain systems:
 |---------|----------|---------|
 | SGT Verification | Token Extensions (Token-2022) | `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb` |
 | .skr Domains | AllDomains | `@onsol/tldparser` |
-| SKR Token | SPL Token | Standard ATA lookups |
+| SKR Balance | SPL Token | Standard ATA lookups |
+| SKR Staking | Merkle Claim | `mERKcfxMC5SqJn4Ld4BUris3WKZZ1ojjWJ3A3J5CKxv` |
 
 **SGT Verification Algorithm:**
 1. Fetch all Token-2022 token accounts for the wallet
