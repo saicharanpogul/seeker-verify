@@ -34,3 +34,30 @@ export function chunk<T>(array: T[], size: number): T[][] {
   }
   return chunks;
 }
+
+/**
+ * Read a u128 (little-endian) from a Buffer at the given offset.
+ *
+ * @param buf - Buffer to read from
+ * @param offset - Byte offset
+ * @returns BigInt value
+ */
+export function readU128LE(buf: Buffer, offset: number): bigint {
+  const lo = buf.readBigUInt64LE(offset);
+  const hi = buf.readBigUInt64LE(offset + 8);
+  return lo + (hi << 64n);
+}
+
+/**
+ * Write a u128 (little-endian) to a Buffer at the given offset.
+ *
+ * @param buf - Buffer to write to
+ * @param value - BigInt value to write
+ * @param offset - Byte offset
+ */
+export function writeU128LE(buf: Buffer, value: bigint, offset: number): void {
+  const lo = value & 0xFFFFFFFFFFFFFFFFn;
+  const hi = (value >> 64n) & 0xFFFFFFFFFFFFFFFFn;
+  buf.writeBigUInt64LE(lo, offset);
+  buf.writeBigUInt64LE(hi, offset + 8);
+}

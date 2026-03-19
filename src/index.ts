@@ -5,18 +5,51 @@ import { verifySGT } from "./sgt";
 import { reverseResolveSkr } from "./skr-domains";
 import { getSKRBalance, getSKRStakeInfo } from "./skr-token";
 
-// Re-export all public API
+// ── SGT ─────────────────────────────────────────────────────────────────
 export { verifySGT, isSeeker, getSGTDetails } from "./sgt";
+
+// ── .skr domains ────────────────────────────────────────────────────────
 export {
   resolveSkrDomain,
   reverseResolveSkr,
   isSkrDomain,
   getSkrDomains,
 } from "./skr-domains";
+
+// ── SKR token ───────────────────────────────────────────────────────────
 export { getSKRBalance, getSKRStakeInfo, hasMinSKR } from "./skr-token";
+
+// ── Guardian pools ──────────────────────────────────────────────────────
+export {
+  getGuardianPool,
+  getGuardiansForStaker,
+  getAllGuardians,
+} from "./guardian";
+
+// ── Staking stats ───────────────────────────────────────────────────────
+export { getStakingStats } from "./staking-stats";
+
+// ── Instruction builders ────────────────────────────────────────────────
+export {
+  createStakeInstruction,
+  createUnstakeInstruction,
+  createCancelUnstakeInstruction,
+  createWithdrawInstruction,
+} from "./instructions";
+
+// ── PDA derivation helpers ──────────────────────────────────────────────
+export {
+  deriveStakeConfigPda,
+  deriveUserStakePda,
+  deriveGuardianPoolPda,
+  deriveStakeVaultPda,
+  deriveEventAuthorityPda,
+} from "./pda";
+
+// ── Utilities ───────────────────────────────────────────────────────────
 export { LRUCache } from "./cache";
 
-// Re-export types
+// ── Types ───────────────────────────────────────────────────────────────
 export type {
   SGTResult,
   SGTVerifyOptions,
@@ -24,13 +57,15 @@ export type {
   SKRBalance,
   SKRStakeInfo,
   SeekerProfile,
+  GuardianPool,
+  StakingStats,
   CacheOptions,
   CacheConfig,
   WalletAddress,
 } from "./types";
 export { toWalletString, toPublicKey } from "./types";
 
-// Re-export errors
+// ── Errors ──────────────────────────────────────────────────────────────
 export {
   SeekerVerifyError,
   SGTVerificationError,
@@ -39,7 +74,7 @@ export {
   RpcError,
 } from "./errors";
 
-// Re-export constants
+// ── Constants ───────────────────────────────────────────────────────────
 export {
   SGT_MINT_AUTHORITY,
   SGT_METADATA_ADDRESS,
@@ -47,8 +82,12 @@ export {
   TOKEN_2022_PROGRAM_ID,
   SKR_MINT_ADDRESS,
   SKR_STAKING_PROGRAM_ID,
+  SKR_STAKE_CONFIG,
+  SHARE_PRECISION,
   SKR_TLD,
 } from "./constants";
+
+// ── Aggregate ───────────────────────────────────────────────────────────
 
 /**
  * Get a complete Seeker profile for a wallet address.
@@ -66,15 +105,14 @@ export {
  * ```typescript
  * const profile = await getSeekerProfile(connection, walletAddress);
  * console.log(`Seeker: ${profile.isSeeker}`);
- * console.log(`Domain: ${profile.skrDomain}`);
- * console.log(`SKR Balance: ${profile.skrBalance}`);
+ * console.log(`Staked: ${profile.stakedAmount} SKR`);
+ * console.log(`Yield: ${profile.yieldEarned} SKR`);
  * ```
  */
 export async function getSeekerProfile(
   connection: Connection,
   walletAddress: WalletAddress
 ): Promise<SeekerProfile> {
-  // Validate address up front before parallel queries
   const pubkey = validateAndParseAddress(walletAddress);
   const walletStr = pubkey.toBase58();
 

@@ -15,7 +15,7 @@ import {
 } from "./constants";
 import { SKRBalance, SKRStakeInfo, WalletAddress } from "./types";
 import { RpcError } from "./errors";
-import { validateAndParseAddress } from "./utils";
+import { validateAndParseAddress, readU128LE } from "./utils";
 import { LRUCache } from "./cache";
 
 const balanceCache = new LRUCache<SKRBalance>({
@@ -26,15 +26,6 @@ const balanceCache = new LRUCache<SKRBalance>({
 /** SKR token decimals */
 const SKR_DECIMALS = 6;
 const SKR_DIVISOR = Math.pow(10, SKR_DECIMALS);
-
-/**
- * Read a u128 (little-endian) from a Buffer at the given offset.
- */
-function readU128LE(buf: Buffer, offset: number): bigint {
-  const lo = buf.readBigUInt64LE(offset);
-  const hi = buf.readBigUInt64LE(offset + 8);
-  return lo + (hi << 64n);
-}
 
 /**
  * Get the SKR token balance for a wallet.

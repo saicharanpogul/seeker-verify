@@ -76,6 +76,44 @@ export interface SeekerProfile {
   yieldEarned: number;
 }
 
+/** Guardian delegation pool information */
+export interface GuardianPool {
+  /** The guardian pool account address */
+  address: string;
+  /** The guardian's public key (PDA seed, immutable) */
+  guardian: string;
+  /** The operational authority for the guardian */
+  authority: string;
+  /** Total shares delegated to this guardian */
+  totalShares: bigint;
+  /** Commission rate in basis points (0-10,000) */
+  commissionBps: number;
+  /** Whether this guardian pool is active */
+  active: boolean;
+  /** Accrued but unclaimed commission (raw) */
+  accruedCommission: bigint;
+}
+
+/** Global staking statistics */
+export interface StakingStats {
+  /** Total shares outstanding across all stakers */
+  totalShares: bigint;
+  /** Current share price (scaled by 1e9) */
+  sharePrice: bigint;
+  /** Share price as a human-readable multiplier (e.g., 1.036 means 3.6% yield) */
+  sharePriceMultiplier: number;
+  /** Total value locked in the stake vault (UI units) */
+  totalValueLocked: number;
+  /** Minimum stake amount in SKR (UI units) */
+  minStakeAmount: number;
+  /** Cooldown period in seconds before unstaked tokens can be withdrawn */
+  cooldownSeconds: number;
+  /** Number of active guardian pools */
+  guardianCount: number;
+  /** Stake vault address */
+  vaultAddress: string;
+}
+
 /** Options for functions that support caching */
 export interface CacheOptions {
   /** Enable caching of results (default: true) */

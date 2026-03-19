@@ -1,6 +1,6 @@
 {
   "name": "seeker-verify",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "TypeScript SDK for verifying Solana Seeker device ownership, resolving .skr domains, and querying SKR token state",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
