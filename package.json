@@ -1,0 +1,60 @@
+{
+  "name": "seeker-verify",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for verifying Solana Seeker device ownership, resolving .skr domains, and querying SKR token state",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/ tests/",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "bun run build"
+  },
+  "keywords": [
+    "solana",
+    "seeker",
+    "sgt",
+    "skr",
+    "solana-mobile",
+    "token-2022",
+    "domain",
+    "verification"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seeker-verify/seeker-verify"
+  },
+  "dependencies": {
+    "@onsol/tldparser": "^0.6.0",
+    "@solana/spl-token": "^0.4.0",
+    "@solana/web3.js": "^1.95.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.0.0"
+  }
+}
