@@ -1,6 +1,6 @@
 {
   "name": "seeker-sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The complete TypeScript SDK for the Solana Seeker ecosystem — device verification, .skr domains, SKR staking, guardian pools, and transaction builders",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
