@@ -44,7 +44,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/saicharanpogul/seeker-verify"
+    "url": "https://github.com/saicharanpogul/seeker-sdk"
   },
   "dependencies": {
     "@onsol/tldparser": "^0.6.0",
