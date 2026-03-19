@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
+import { Keypair, SystemProgram } from "@solana/web3.js";
 import {
   createStakeInstruction,
   createUnstakeInstruction,

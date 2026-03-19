@@ -7,7 +7,7 @@ import {
   deriveStakeVaultPda,
   deriveEventAuthorityPda,
 } from "../src/pda";
-import { SKR_STAKE_CONFIG, SKR_STAKING_PROGRAM_ID } from "../src/constants";
+import { SKR_STAKE_CONFIG } from "../src/constants";
 
 describe("PDA derivation", () => {
   it("deriveStakeConfigPda matches known address", () => {

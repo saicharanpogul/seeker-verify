@@ -10,7 +10,7 @@ import {
   USER_STAKE_ACCOUNT_SIZE,
   SKR_STAKING_PROGRAM_ID,
 } from "../src/constants";
-import { InvalidAddressError, RpcError } from "../src/errors";
+import { InvalidAddressError } from "../src/errors";
 
 function makeGuardianPoolData(opts: {
   guardian?: PublicKey;

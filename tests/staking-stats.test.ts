@@ -3,7 +3,6 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import { getStakingStats } from "../src/staking-stats";
 import {
   STAKE_CONFIG_ACCOUNT_SIZE,
-  GUARDIAN_POOL_ACCOUNT_SIZE,
   STAKE_CONFIG_VAULT_OFFSET,
   STAKE_CONFIG_MIN_STAKE_OFFSET,
   STAKE_CONFIG_COOLDOWN_OFFSET,
