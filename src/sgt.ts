@@ -11,7 +11,7 @@ import {
   SGT_CACHE_TTL,
 } from "./constants";
 import { SGTResult, SGTVerifyOptions, WalletAddress } from "./types";
-import { SGTVerificationError, RpcError } from "./errors";
+import { RpcError } from "./errors";
 import { validateAndParseAddress, chunk } from "./utils";
 import { LRUCache } from "./cache";
 

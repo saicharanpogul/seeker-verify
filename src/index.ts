@@ -1,7 +1,7 @@
 import { Connection } from "@solana/web3.js";
-import { SeekerProfile, WalletAddress, toWalletString } from "./types";
+import type { SeekerProfile, WalletAddress } from "./types";
 import { validateAndParseAddress } from "./utils";
-import { verifySGT, isSeeker, getSGTDetails } from "./sgt";
+import { verifySGT } from "./sgt";
 import { reverseResolveSkr } from "./skr-domains";
 import { getSKRBalance, getSKRStakeInfo } from "./skr-token";
 

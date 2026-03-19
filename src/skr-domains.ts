@@ -2,7 +2,7 @@ import { Connection } from "@solana/web3.js";
 import { TldParser } from "@onsol/tldparser";
 import { SKR_TLD, DOMAIN_CACHE_TTL } from "./constants";
 import { WalletAddress } from "./types";
-import { DomainResolutionError, RpcError } from "./errors";
+import { DomainResolutionError } from "./errors";
 import { validateAndParseAddress } from "./utils";
 import { LRUCache } from "./cache";
 
