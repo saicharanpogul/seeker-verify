@@ -15,6 +15,16 @@
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
       }
+    },
+    "./react": {
+      "import": {
+        "types": "./dist/react/index.d.mts",
+        "default": "./dist/react/index.mjs"
+      },
+      "require": {
+        "types": "./dist/react/index.d.ts",
+        "default": "./dist/react/index.js"
+      }
     }
   },
   "files": [
@@ -46,12 +56,21 @@
     "type": "git",
     "url": "https://github.com/saicharanpogul/seeker-sdk"
   },
+  "peerDependencies": {
+    "react": ">=17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
   "dependencies": {
     "@onsol/tldparser": "^0.6.0",
     "@solana/spl-token": "^0.4.0",
     "@solana/web3.js": "^1.95.0"
   },
   "devDependencies": {
+    "@types/react": "^19.2.14",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "eslint": "^8.0.0",
