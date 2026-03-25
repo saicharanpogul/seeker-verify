@@ -119,7 +119,7 @@ describe("reverseResolveSkr", () => {
       getOwnerFromDomainTld: vi.fn(),
       getMainDomain: vi.fn().mockRejectedValue(new Error("not found")),
       getParsedAllUserDomainsFromTld: vi.fn().mockResolvedValue([
-        { domain: "fallback", nameAccount: MOCK_OWNER },
+        { domain: "fallback.skr", nameAccount: MOCK_OWNER },
       ]),
     };
     vi.mocked(TldParser).mockImplementation(() => mockParser as unknown as InstanceType<typeof TldParser>);
@@ -128,6 +128,10 @@ describe("reverseResolveSkr", () => {
     const result = await reverseResolveSkr(connection, wallet);
 
     expect(result).toBe("fallback.skr");
+    expect(mockParser.getParsedAllUserDomainsFromTld).toHaveBeenCalledWith(
+      expect.any(PublicKey),
+      "skr"
+    );
   });
 
   it("returns null when no .skr domains found", async () => {
@@ -143,6 +147,10 @@ describe("reverseResolveSkr", () => {
     const result = await reverseResolveSkr(connection, wallet);
 
     expect(result).toBeNull();
+    expect(mockParser.getParsedAllUserDomainsFromTld).toHaveBeenCalledWith(
+      expect.any(PublicKey),
+      "skr"
+    );
   });
 
   it("throws InvalidAddressError for invalid wallet", async () => {
@@ -194,8 +202,8 @@ describe("getSkrDomains", () => {
       getOwnerFromDomainTld: vi.fn(),
       getMainDomain: vi.fn(),
       getParsedAllUserDomainsFromTld: vi.fn().mockResolvedValue([
-        { domain: "first", nameAccount: MOCK_OWNER },
-        { domain: "second", nameAccount: MOCK_OWNER },
+        { domain: "first.skr", nameAccount: MOCK_OWNER },
+        { domain: "second.skr", nameAccount: MOCK_OWNER },
       ]),
     };
     vi.mocked(TldParser).mockImplementation(() => mockParser as unknown as InstanceType<typeof TldParser>);
@@ -204,6 +212,10 @@ describe("getSkrDomains", () => {
     const result = await getSkrDomains(connection, wallet);
 
     expect(result).toEqual(["first.skr", "second.skr"]);
+    expect(mockParser.getParsedAllUserDomainsFromTld).toHaveBeenCalledWith(
+      expect.any(PublicKey),
+      "skr"
+    );
   });
 
   it("returns empty array when wallet has no domains", async () => {
@@ -219,5 +231,9 @@ describe("getSkrDomains", () => {
     const result = await getSkrDomains(connection, wallet);
 
     expect(result).toEqual([]);
+    expect(mockParser.getParsedAllUserDomainsFromTld).toHaveBeenCalledWith(
+      expect.any(PublicKey),
+      "skr"
+    );
   });
 });

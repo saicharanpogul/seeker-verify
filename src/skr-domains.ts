@@ -136,9 +136,9 @@ export async function reverseResolveSkr(
     }
 
     // Fallback: get all .skr domains and return the first one
-    const domains = await parser.getParsedAllUserDomainsFromTld(pubkey, SKR_TLD);
+    const domains = await parser.getParsedAllUserDomainsFromTld(pubkey, SKR_TLD.slice(1));
     if (domains.length > 0 && domains[0]) {
-      const domain = `${domains[0].domain}${SKR_TLD}`;
+      const domain = domains[0].domain.endsWith(SKR_TLD) ? domains[0].domain : `${domains[0].domain}${SKR_TLD}`;
       reverseCache.set(walletStr, domain);
       return domain;
     }
@@ -198,8 +198,8 @@ export async function getSkrDomains(
 
   try {
     const parser = new TldParser(connection);
-    const domains = await parser.getParsedAllUserDomainsFromTld(pubkey, SKR_TLD);
-    return domains.map((d) => `${d.domain}${SKR_TLD}`);
+    const domains = await parser.getParsedAllUserDomainsFromTld(pubkey, SKR_TLD.slice(1));
+    return domains.map((d) => d.domain.endsWith(SKR_TLD) ? d.domain : `${d.domain}${SKR_TLD}`);
   } catch {
     return [];
   }
